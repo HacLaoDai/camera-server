@@ -1,0 +1,7 @@
+.env
+*.tar.gz
+__pycache__/
+*.pyc
+logs/
+saved_person/
+pending_face_events/

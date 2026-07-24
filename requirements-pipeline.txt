@@ -1,0 +1,14 @@
+# Container: camera-pipeline (multi_main.py)
+# torch được cài RIÊNG trong Dockerfile.pipeline (bản CPU-only từ
+# download.pytorch.org) TRƯỚC khi cài file này, để tránh pip kéo nhầm bản
+# torch có CUDA bundled (nặng hơn nhiều lần, không cần thiết vì server này
+# chỉ có CPU).
+
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+ultralytics==8.2.103
+insightface==0.7.3
+onnxruntime==1.18.1
+faiss-cpu==1.8.0.post1
+pymongo==4.8.0
+Pillow==10.4.0

@@ -1,0 +1,13 @@
+**/__pycache__/
+**/*.pyc
+.git
+.env
+*.log
+build.log
+logs/
+saved_person/
+pending_face_events/
+faces/
+*.mp4
+*.jpg
+*.png

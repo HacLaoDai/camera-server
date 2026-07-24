@@ -1,0 +1,49 @@
+services:
+  camera-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    image: camera-pipeline:latest
+    container_name: camera-pipeline
+    restart: unless-stopped
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      STREAM_PORT: "8090"
+      STREAM_FPS: "10"
+      LOG_DIR: /app/logs
+      PENDING_EVENTS_DIR: /app/pending_face_events
+    ports:
+      - "8090:8090"   # xem video: http://<ip-server>:8090/stream
+    volumes:
+      - ./data/logs:/app/logs
+      - ./data/saved_person:/app/saved_person
+      - ./data/pending_face_events:/app/pending_face_events
+      - insightface-cache:/root/.insightface
+    networks:
+      - camnet
+
+  api-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: camera-api:latest
+    container_name: camera-api
+    restart: unless-stopped
+    environment:
+      MONGO_URI: ${MONGO_URI}
+    ports:
+      - "8000:8000"   # Swagger UI: http://<ip-server>:8000/docs
+    volumes:
+      - insightface-cache:/root/.insightface
+    networks:
+      - camnet
+
+networks:
+  camnet:
+    driver: bridge
+
+volumes:
+  # insightface tự tải model (~350MB, buffalo_l) về ~/.insightface lúc
+  # chạy lần đầu nếu chưa có sẵn - dùng chung volume này giữa 2 container
+  # để chỉ phải tải 1 lần, và không mất khi container bị recreate.
+  insightface-cache:
